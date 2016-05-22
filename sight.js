@@ -161,7 +161,7 @@ function draw() {
 	intersects = intersects.sort(function(a,b){ return a.angle - b.angle; });
 	rotate(intersects, findWithAttr(intersects, "angle", minFOV));
 
-	ctx.fillStyle = 'rgba(255,255,255,0.5)';
+	ctx.fillStyle = 'rgba(255,255,0,0.5)';
 	ctx.beginPath();
 	ctx.moveTo(Center.x, Center.y);
 	// ctx.moveTo(intersects[0].x, intersects[0].y);
