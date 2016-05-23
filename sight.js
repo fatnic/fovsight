@@ -1,30 +1,12 @@
-var RAD = 2 * Math.PI;
 var heading = 0;
-var FOV = deg2rad(60);
 var SPEED = 10;
+var FOV = deg2rad(70);
+var envImg;
 
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
 function draw() {
-
-    ctx.fillStyle = "#000";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // ctx.strokeStyle = "#999";
-    // for (var i = 0; i < Walls.segments.length; i++) {
-    //     var seg = Walls.segments[i];
-    //     ctx.beginPath();
-    //     ctx.moveTo(seg.a.x, seg.a.y);
-    //     ctx.lineTo(seg.b.x, seg.b.y);
-    //     ctx.stroke();
-    // }
-
-    ctx.fillStyle = "#8ab325";
-    for(var i=0; i < Walls.boxes.length; i++) {
-        var w = Walls.boxes[i];
-        ctx.fillRect(w.x, w.y, w.w, w.h);
-    }
 
     var points = (function(segments) {
         var a = [];
@@ -46,7 +28,6 @@ function draw() {
             }
         });
     })(points);
-
 
     var minFOV = radNormalize(heading - (FOV / 2));
     var maxFOV = radNormalize(heading + (FOV / 2));
@@ -131,6 +112,25 @@ function draw() {
     // }
 }
 
+function renderEnvironment() {
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // ctx.strokeStyle = "#999";
+    // for (var i = 0; i < Walls.segments.length; i++) {
+    //     var seg = Walls.segments[i];
+    //     ctx.beginPath();
+    //     ctx.moveTo(seg.a.x, seg.a.y);
+    //     ctx.lineTo(seg.b.x, seg.b.y);
+    //     ctx.stroke();
+    // }
+    ctx.fillStyle = "#8ab325";
+    for(var i=0; i < Walls.boxes.length; i++) {
+        var w = Walls.boxes[i];
+        ctx.fillRect(w.x, w.y, w.w, w.h);
+    }
+    envImg = ctx.getImageData(0, 0, canvas.width, canvas.height);
+}
+
 var lastUpdate = Date.now();
 
 function drawLoop() {
@@ -145,10 +145,13 @@ function drawLoop() {
     if (Key.isDown(Key.D)) Center.x += SPEED*dt;
     if (Key.isDown(Key.A)) Center.x -= SPEED*dt;
 
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.putImageData(envImg, 0, 0);
     draw();
 }
 
 window.onload = function() {
+    renderEnvironment();
     drawLoop();
 };
 

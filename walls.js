@@ -6,7 +6,7 @@ var Walls = {
         this.segments.push({a:{x:x+w,y:y}, b:{x:x+w,y:y+h}});
         this.segments.push({a:{x:x+w,y:y+h}, b:{x:x,y:y+h}});
         this.segments.push({a:{x:x,y:y+h}, b:{x:x,y:y}});
-        if(solid) this.boxes.push({x:x, y:y, w:w, h:h});
+        if(solid) this.boxes.push({x:x,y:y,w:w,h:h});
     }
 };
 

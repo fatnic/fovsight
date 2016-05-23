@@ -1,3 +1,5 @@
+var RAD = 2 * Math.PI;
+
 function rotate(array, times) {
     while (times--) {
         var temp = array.shift();
