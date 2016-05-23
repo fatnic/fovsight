@@ -1,12 +1,27 @@
 var RAD = 2 * Math.PI;
 var heading = 0;
 var FOV = deg2rad(60);
+var SPEED = 10;
 
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
-Walls.addWall(0, 0, canvas.width, canvas.height);
-Walls.addWall(50,50,100,200);
+// Outer wall
+Walls.add(0, 0, canvas.width, canvas.height);
+
+// Room
+Walls.add(50,50,100,200);
+Walls.add(850,50,50,400);
+Walls.add(750,50,50,400);
+Walls.add(250,50,100,50);
+Walls.add(400,50,100,50);
+
+// Random walls
+Walls.add(50,280,20,200);
+Walls.add(250,280,20,90);
+Walls.add(250,390,20,90);
+Walls.add(70,280,180,20);
+Walls.add(70,460,180,20);
 
 function draw() {
     ctx.fillStyle = "#000";
@@ -128,15 +143,21 @@ function draw() {
     // }
 }
 
-var updateCanvas = true;
+var lastUpdate = Date.now();
 
 function drawLoop() {
     window.requestAnimationFrame(drawLoop);
 
-    if (Key.isDown(Key.W)) Center.y -= 1;
-    if (Key.isDown(Key.S)) Center.y += 1;
-    if (Key.isDown(Key.D)) Center.x += 1;
-    if (Key.isDown(Key.A)) Center.x -= 1;
+    var now = Date.now();
+    var dt = (now - lastUpdate)/100;
+    lastUpdate = now;
+
+    console.log(dt);
+
+    if (Key.isDown(Key.W)) Center.y -= SPEED*dt;
+    if (Key.isDown(Key.S)) Center.y += SPEED*dt;
+    if (Key.isDown(Key.D)) Center.x += SPEED*dt;
+    if (Key.isDown(Key.A)) Center.x -= SPEED*dt;
 
     draw();
 }
