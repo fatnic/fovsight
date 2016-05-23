@@ -6,26 +6,6 @@ var SPEED = 10;
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
-// Outer wall
-Walls.addSegment(0, 0, canvas.width, 0);
-Walls.addSegment(canvas.width, 0, canvas.width, canvas.height);
-Walls.addSegment(canvas.width, canvas.height, 0, canvas.height);
-Walls.addSegment(0, canvas.height, 0, 0);
-
-// Room
-Walls.add(50,50,100,200);
-Walls.add(850,50,50,400);
-Walls.add(750,50,50,400);
-Walls.add(250,50,100,50);
-Walls.add(400,50,100,50);
-
-// Random walls
-Walls.add(50,280,20,200);
-Walls.add(250,280,20,90);
-Walls.add(250,390,20,90);
-Walls.add(70,280,180,20);
-Walls.add(70,460,180,20);
-
 function draw() {
 
     ctx.fillStyle = "#000";
@@ -127,10 +107,9 @@ function draw() {
     });
     rotate(intersects, findWithAttr(intersects, "angle", minFOV));
 
-    ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
     ctx.beginPath();
     ctx.moveTo(Center.x, Center.y);
-    // ctx.moveTo(intersects[0].x, intersects[0].y);
     for (var g = 0; g < intersects.length; g++) {
         var intersect = intersects[g];
         ctx.lineTo(intersect.x, intersect.y);
