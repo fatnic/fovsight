@@ -5,14 +5,17 @@ var FOV = deg2rad(60);
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
+Walls.addWall(0, 0, canvas.width, canvas.height);
+Walls.addWall(50,50,100,200);
+
 function draw() {
     ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.strokeStyle = "#999";
 
-    for (var i = 0; i < segments.length; i++) {
-        var seg = segments[i];
+    for (var i = 0; i < Walls.segments.length; i++) {
+        var seg = Walls.segments[i];
         ctx.beginPath();
         ctx.moveTo(seg.a.x, seg.a.y);
         ctx.lineTo(seg.b.x, seg.b.y);
@@ -25,7 +28,7 @@ function draw() {
             a.push(seg.a, seg.b);
         });
         return a;
-    })(segments);
+    })(Walls.segments);
 
     var uniquePoints = (function(points) {
         var set = {};
@@ -50,8 +53,7 @@ function draw() {
     var precision = 0.000001;
     for (var k = 0; k < uniquePoints.length; k++) {
         var uniquePoint = uniquePoints[k];
-        var angle = Math.atan2(uniquePoint.y - Center.y, uniquePoint.x - Center
-            .x);
+        var angle = Math.atan2(uniquePoint.y - Center.y, uniquePoint.x - Center.x);
 
         if (!radBetween(angle, minFOV, maxFOV)) continue;
 
@@ -82,8 +84,8 @@ function draw() {
 
         var closestIntersect = null;
 
-        for (var l = 0; l < segments.length; l++) {
-            var intersection = getIntersection(ray, segments[l]);
+        for (var l = 0; l < Walls.segments.length; l++) {
+            var intersection = getIntersection(ray, Walls.segments[l]);
             if (!intersection) continue;
             if (!closestIntersect || intersection.param < closestIntersect.param) {
                 closestIntersect = intersection;
