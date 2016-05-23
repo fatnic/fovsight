@@ -7,7 +7,10 @@ var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
 // Outer wall
-Walls.add(0, 0, canvas.width, canvas.height);
+Walls.addSegment(0, 0, canvas.width, 0);
+Walls.addSegment(canvas.width, 0, canvas.width, canvas.height);
+Walls.addSegment(canvas.width, canvas.height, 0, canvas.height);
+Walls.addSegment(0, canvas.height, 0, 0);
 
 // Room
 Walls.add(50,50,100,200);
@@ -24,17 +27,23 @@ Walls.add(70,280,180,20);
 Walls.add(70,460,180,20);
 
 function draw() {
+
     ctx.fillStyle = "#000";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.strokeStyle = "#999";
+    // ctx.strokeStyle = "#999";
+    // for (var i = 0; i < Walls.segments.length; i++) {
+    //     var seg = Walls.segments[i];
+    //     ctx.beginPath();
+    //     ctx.moveTo(seg.a.x, seg.a.y);
+    //     ctx.lineTo(seg.b.x, seg.b.y);
+    //     ctx.stroke();
+    // }
 
-    for (var i = 0; i < Walls.segments.length; i++) {
-        var seg = Walls.segments[i];
-        ctx.beginPath();
-        ctx.moveTo(seg.a.x, seg.a.y);
-        ctx.lineTo(seg.b.x, seg.b.y);
-        ctx.stroke();
+    ctx.fillStyle = "#8ab325";
+    for(var i=0; i < Walls.boxes.length; i++) {
+        var w = Walls.boxes[i];
+        ctx.fillRect(w.x, w.y, w.w, w.h);
     }
 
     var points = (function(segments) {
@@ -151,8 +160,6 @@ function drawLoop() {
     var now = Date.now();
     var dt = (now - lastUpdate)/100;
     lastUpdate = now;
-
-    console.log(dt);
 
     if (Key.isDown(Key.W)) Center.y -= SPEED*dt;
     if (Key.isDown(Key.S)) Center.y += SPEED*dt;
