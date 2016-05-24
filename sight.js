@@ -2,31 +2,10 @@ var heading = 0;
 var SPEED = 10;
 var FOV = deg2rad(50);
 var envImg;
-var Baddie = {x:180,y:170};
+var Player = {x:180,y:170};
 
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
-
-function pointInVision(poly, point){
-    for(var i=0; i < poly.length; i++){
-        if(i == poly.length - 1) continue;
-        t1 = Center;
-        t2 = poly[i];
-        t3 = poly[i+1];
-        if(pointInTriangle(point, t1, t2, t3)) return true;
-    }
-    return false;
-}
-
-function pointInTriangle(p, t1, t2, t3){
-    var d = ((t2.y-t3.y)*(t1.x-t3.x) + (t3.x-t2.x)*(t1.y-t3.y));
-
-    var a = ((t2.y-t3.y)*(p.x-t3.x) + (t3.x-t2.x)*(p.y-t3.y)) / d;
-    var b = ((t3.y-t1.y)*(p.x-t3.x) + (t1.x-t3.x)*(p.y-t3.y)) / d;
-    var c = 1 - a - b;
-
-    return 0 <= a && a <= 1 && 0 <= b && b <= 1 && 0 <= c && c <= 1;
-}
 
 function draw() {
 
@@ -112,7 +91,7 @@ function draw() {
     });
     rotate(intersects, findWithAttr(intersects, "angle", minFOV));
 
-    ctx.fillStyle = pointInVision(intersects, Baddie) ? 'rgba(255,0,0,0.4)' : 'rgba(255,255,255,0.4)';
+    ctx.fillStyle = pointInVision(intersects, Player) ? 'rgba(255,0,0,0.4)' : 'rgba(255,255,255,0.4)';
 
     // ctx.fillStyle = 'rgba(255,255,255,0.4)';
     // ctx.shadowBlur = 30;
@@ -125,9 +104,10 @@ function draw() {
     }
     ctx.fill();
 
-    ctx.fillStyle = 'rgb(255,0,0)';
+    // Player circle
+    ctx.fillStyle = 'rgb(255,255,100)';
 	ctx.beginPath();
-	ctx.arc(Baddie.x, Baddie.y, 4, 0, RAD, false);
+	ctx.arc(Player.x, Player.y, 4, 0, RAD, false);
 	ctx.fill();
 
     // ctx.fillStyle = "#dd3838";
@@ -135,13 +115,13 @@ function draw() {
     // 	var intersect = intersects[n];
     // 	ctx.strokeStyle = (intersect.angle == minFOV || intersect.angle == maxFOV) ? "rgba(0,255,255,0.2)" : "rgba(255,0,0,0.2)";
 
+    // DRAW DEBUG RAYS
     // ctx.strokeStyle = 'rgb(255,0,0)';
     // for (var g = 0; g < intersects.length; g++) {
     //     ctx.beginPath();
     //     ctx.moveTo(Center.x, Center.y);
     //     ctx.lineTo(intersects[g].x, intersects[g].y);
     //     ctx.stroke();
-    //
     // }
 
 
@@ -168,7 +148,7 @@ function renderEnvironment() {
 
         // ctx.drawImage(this, 0, 0);
 
-        ctx.fillStyle = "#8ab325";
+        ctx.fillStyle = "rgb(0,0,255)";
         for(var i=0; i < Walls.boxes.length; i++) {
             var w = Walls.boxes[i];
             ctx.fillRect(w.x, w.y, w.w, w.h);
@@ -187,10 +167,10 @@ function drawLoop() {
     var dt = (now - lastUpdate)/100;
     lastUpdate = now;
 
-    if (Key.isDown(Key.W)) Baddie.y -= SPEED*dt;
-    if (Key.isDown(Key.S)) Baddie.y += SPEED*dt;
-    if (Key.isDown(Key.D)) Baddie.x += SPEED*dt;
-    if (Key.isDown(Key.A)) Baddie.x -= SPEED*dt;
+    if (Key.isDown(Key.W)) Player.y -= SPEED*dt;
+    if (Key.isDown(Key.S)) Player.y += SPEED*dt;
+    if (Key.isDown(Key.D)) Player.x += SPEED*dt;
+    if (Key.isDown(Key.A)) Player.x -= SPEED*dt;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.putImageData(envImg,0, 0);

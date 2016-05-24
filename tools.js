@@ -80,3 +80,24 @@ function getIntersection(ray, segment) {
         param: T1
     };
 }
+
+function pointInVision(poly, point){
+    for(var i=0; i < poly.length; i++){
+        if(i == poly.length - 1) continue;
+        t1 = Center;
+        t2 = poly[i];
+        t3 = poly[i+1];
+        if(pointInTriangle(point, t1, t2, t3)) return true;
+    }
+    return false;
+}
+
+function pointInTriangle(p, t1, t2, t3){
+    var d = ((t2.y-t3.y)*(t1.x-t3.x) + (t3.x-t2.x)*(t1.y-t3.y));
+
+    var a = ((t2.y-t3.y)*(p.x-t3.x) + (t3.x-t2.x)*(p.y-t3.y)) / d;
+    var b = ((t3.y-t1.y)*(p.x-t3.x) + (t1.x-t3.x)*(p.y-t3.y)) / d;
+    var c = 1 - a - b;
+
+    return 0 <= a && a <= 1 && 0 <= b && b <= 1 && 0 <= c && c <= 1;
+}

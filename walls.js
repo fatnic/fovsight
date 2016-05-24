@@ -10,8 +10,13 @@ var Walls = {
     }
 };
 
+function gridWall(x,y,w,h,g=16){
+    Walls.add(x*g,y*g,w*g,h*g);
+}
+
 // Outer wall
 Walls.add(0, 0, canvas.width, canvas.height, false);
+
 // Random walls
 Walls.add(50,50,100,200);
 Walls.add(850,50,50,400);
@@ -20,9 +25,10 @@ Walls.add(250,50,100,50);
 Walls.add(650,50,100,50);
 Walls.add(400,50,100,50);
 Walls.add(750,480,150,50);
+
 // Room walls
-Walls.add(50,280,20,200);
-Walls.add(250,280,20,80);
-Walls.add(250,400,20,80);
-Walls.add(70,280,180,20);
-Walls.add(70,460,180,20);
+gridWall(4, 20, 12, 1);
+gridWall(4, 30, 12, 1);
+gridWall(4, 21, 1, 9);
+gridWall(15, 21, 1, 3);
+gridWall(15, 27, 1, 3);
