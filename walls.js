@@ -9,8 +9,8 @@ var Walls = {
         this.segments.push({a:{x:x,y:y+h}, b:{x:x,y:y}});
         if(solid) this.boxes.push({x:x,y:y,w:w,h:h});
     },
-    addByGrid: function(x,y,w,h){
-        this.add(x*this.grid, y*this.grid, w*this.grid, h*this.grid);
+    addByGrid: function(x,y,w,h,solid=true){
+        this.add(x*this.grid, y*this.grid, w*this.grid, h*this.grid,solid);
     }
 };
 
