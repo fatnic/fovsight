@@ -2,7 +2,33 @@ var heading = 0;
 var SPEED = 10;
 var FOV = deg2rad(50);
 var envImg;
-var Player = {x:180,y:170};
+var Player = {
+    x: 180,
+    y: 170,
+    moveUp: function(dt) { this.y -= SPEED * dt; },
+    moveDown: function(dt) { this.y += SPEED * dt; },
+    moveLeft: function(dt) { this.x -= SPEED * dt; },
+    moveRight: function(dt) { this.x += SPEED * dt; }
+};
+// function Player(){
+//     this.x = 180;
+//     this.y = 170;
+//     // this.moveUp = function(dt) { this.y -= SPEED * dt; };
+//     // this.moveDown = function(dt) { this.y += SPEED * dt; };
+//     // this.moveLeft = function(dt) { this.x -= SPEED * dt; };
+//     // this.moveRight = function(dt) { this.x += SPEED * dt; };
+// }
+
+function moveplayerUp(dt){ Player.moveUp(dt); }
+function moveplayerDown(dt){ Player.moveDown(dt); }
+function moveplayerLeft(dt){ Player.moveLeft(dt); }
+function moveplayerRight(dt){ Player.moveRight(dt); }
+
+Events.on("keyUp", moveplayerUp);
+Events.on("keyDown", moveplayerDown);
+Events.on("keyLeft", moveplayerLeft);
+Events.on("keyRight", moveplayerRight);
+
 
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
@@ -167,10 +193,20 @@ function drawLoop() {
     var dt = (now - lastUpdate)/100;
     lastUpdate = now;
 
-    if (Key.isDown(Key.W)) Player.y -= SPEED*dt;
-    if (Key.isDown(Key.S)) Player.y += SPEED*dt;
-    if (Key.isDown(Key.D)) Player.x += SPEED*dt;
-    if (Key.isDown(Key.A)) Player.x -= SPEED*dt;
+    // if (Key.isDown(Key.W)) Player.y -= SPEED*dt;
+    // if (Key.isDown(Key.S)) Player.y += SPEED*dt;
+    // if (Key.isDown(Key.D)) Player.x += SPEED*dt;
+    // if (Key.isDown(Key.A)) Player.x -= SPEED*dt;
+
+    // if (Key.isDown(Key.W)) Player.moveUp(dt);
+    // if (Key.isDown(Key.S)) Player.y += SPEED*dt;
+    // if (Key.isDown(Key.D)) Player.x += SPEED*dt;
+    // if (Key.isDown(Key.A)) Player.x -= SPEED*dt;
+
+    if (Key.isDown(Key.W)) Events.emit("keyUp", dt);
+    if (Key.isDown(Key.S)) Events.emit("keyDown", dt);
+    if (Key.isDown(Key.D)) Events.emit("keyRight", dt);
+    if (Key.isDown(Key.A)) Events.emit("keyLeft", dt);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.putImageData(envImg,0, 0);
