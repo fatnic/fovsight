@@ -16,10 +16,10 @@ var Events = {
       }
     }
   },
-  emit: function (eventName, data) {
+  emit: function (eventName, data, obj) {
     if (this.events[eventName]) {
       this.events[eventName].forEach(function(fn) {
-        fn(data);
+        fn.call(obj, data);
       });
     }
   }

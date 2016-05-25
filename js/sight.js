@@ -2,14 +2,18 @@ var heading = 0;
 var SPEED = 10;
 var FOV = deg2rad(50);
 var envImg;
-var Player = {
-    x: 180,
-    y: 170,
-    moveUp: function(dt) { this.y -= SPEED * dt; },
-    moveDown: function(dt) { this.y += SPEED * dt; },
-    moveLeft: function(dt) { this.x -= SPEED * dt; },
-    moveRight: function(dt) { this.x += SPEED * dt; }
-};
+
+function Player() {
+    this.x = 180;
+    this.y = 170;
+}
+Player.prototype.moveUp = function(dt) { this.y -= SPEED * dt; };
+Player.prototype.moveDown = function(dt) { this.y += SPEED * dt; };
+Player.prototype.moveLeft = function(dt) { this.x -= SPEED * dt; };
+Player.prototype.moveRight = function(dt) { this.x += SPEED * dt; };
+
+var player = new Player();
+
 // function Player(){
 //     this.x = 180;
 //     this.y = 170;
@@ -19,15 +23,15 @@ var Player = {
 //     // this.moveRight = function(dt) { this.x += SPEED * dt; };
 // }
 
-function moveplayerUp(dt){ Player.moveUp(dt); }
-function moveplayerDown(dt){ Player.moveDown(dt); }
-function moveplayerLeft(dt){ Player.moveLeft(dt); }
-function moveplayerRight(dt){ Player.moveRight(dt); }
+// function moveplayerUp(dt){ Player.moveUp(dt); }
+// function moveplayerDown(dt){ Player.moveDown(dt); }
+// function moveplayerLeft(dt){ Player.moveLeft(dt); }
+// function moveplayerRight(dt){ Player.moveRight(dt); }
 
-Events.on("keyUp", moveplayerUp);
-Events.on("keyDown", moveplayerDown);
-Events.on("keyLeft", moveplayerLeft);
-Events.on("keyRight", moveplayerRight);
+Events.on("keyUp", player.moveUp);
+Events.on("keyDown", player.moveDown);
+Events.on("keyLeft", player.moveLeft);
+Events.on("keyRight", player.moveRight);
 
 
 var canvas = document.getElementById('canvas');
@@ -117,7 +121,7 @@ function draw() {
     });
     rotate(intersects, findWithAttr(intersects, "angle", minFOV));
 
-    ctx.fillStyle = pointInVision(intersects, Player) ? 'rgba(255,0,0,0.4)' : 'rgba(255,255,255,0.4)';
+    ctx.fillStyle = pointInVision(intersects, player) ? 'rgba(255,0,0,0.4)' : 'rgba(255,255,255,0.4)';
 
     // ctx.fillStyle = 'rgba(255,255,255,0.4)';
     // ctx.shadowBlur = 30;
@@ -133,7 +137,7 @@ function draw() {
     // Player circle
     ctx.fillStyle = 'rgb(255,255,100)';
 	ctx.beginPath();
-	ctx.arc(Player.x, Player.y, 4, 0, RAD, false);
+	ctx.arc(player.x, player.y, 4, 0, RAD, false);
 	ctx.fill();
 
     // ctx.fillStyle = "#dd3838";
@@ -203,10 +207,10 @@ function drawLoop() {
     // if (Key.isDown(Key.D)) Player.x += SPEED*dt;
     // if (Key.isDown(Key.A)) Player.x -= SPEED*dt;
 
-    if (Key.isDown(Key.W)) Events.emit("keyUp", dt);
-    if (Key.isDown(Key.S)) Events.emit("keyDown", dt);
-    if (Key.isDown(Key.D)) Events.emit("keyRight", dt);
-    if (Key.isDown(Key.A)) Events.emit("keyLeft", dt);
+    if (Key.isDown(Key.W)) Events.emit("keyUp", dt, player);
+    if (Key.isDown(Key.S)) Events.emit("keyDown", dt, player);
+    if (Key.isDown(Key.D)) Events.emit("keyRight", dt, player);
+    if (Key.isDown(Key.A)) Events.emit("keyLeft", dt, player);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.putImageData(envImg,0, 0);
