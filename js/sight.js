@@ -8,13 +8,16 @@ var ctx = canvas.getContext('2d');
 
 function draw() {
 
+    var wallSegments = [];
+    Walls.forEach(function(wall){ wallSegments = wallSegments.concat(wall.segments); });
+
     var uniquePoints = (function(segments) {
         var a = [];
         segments.forEach(function(seg) {
             a.push(seg.a, seg.b);
         });
         return a;
-    })(Walls.segments);
+    })(wallSegments);
 
     var minFOV = radNormalize(heading - (FOV / 2));
     var maxFOV = radNormalize(heading + (FOV / 2));
@@ -43,21 +46,12 @@ function draw() {
         var dx = Math.cos(angler);
         var dy = Math.sin(angler);
 
-        var ray = {
-            a: {
-                x: Center.x,
-                y: Center.y
-            },
-            b: {
-                x: Center.x + dx,
-                y: Center.y + dy
-            }
-        };
+        var ray = { a: { x: Center.x, y: Center.y }, b: { x: Center.x + dx, y: Center.y + dy } };
 
         var closestIntersect = null;
 
-        for (var l = 0; l < Walls.segments.length; l++) {
-            var intersection = getIntersection(ray, Walls.segments[l]);
+        for (var l = 0; l < wallSegments.length; l++) {
+            var intersection = getIntersection(ray, wallSegments[l]);
             if (!intersection) continue;
             if (!closestIntersect || intersection.param < closestIntersect.param) {
                 closestIntersect = intersection;
@@ -70,9 +64,7 @@ function draw() {
         intersects.push(closestIntersect);
     }
 
-    intersects = intersects.sort(function(a, b) {
-        return a.angle - b.angle;
-    });
+    intersects = intersects.sort(function(a, b) { return a.angle - b.angle; });
     rotate(intersects, findWithAttr(intersects, "angle", minFOV));
 
     ctx.fillStyle = pointInVision(intersects, player) ? 'rgba(255,0,0,0.4)' : 'rgba(255,255,255,0.4)';
@@ -95,9 +87,9 @@ function renderEnvironment() {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.fillStyle = "rgb(0,0,255)";
-        for(var i=0; i < Walls.boxes.length; i++) {
-            var w = Walls.boxes[i];
-            ctx.fillRect(w.x, w.y, w.w, w.h);
+        for(var i=0; i < Walls.length; i++) {
+            var w = Walls[i];
+            if (w.renderable) ctx.fillRect(w.position.x, w.position.y, w.size.w, w.size.h);
         }
 
         envImg = ctx.getImageData(0, 0, canvas.width, canvas.height);
