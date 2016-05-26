@@ -8,28 +8,13 @@ var ctx = canvas.getContext('2d');
 
 function draw() {
 
-    var points = (function(segments) {
+    var uniquePoints = (function(segments) {
         var a = [];
         segments.forEach(function(seg) {
             a.push(seg.a, seg.b);
         });
         return a;
     })(Walls.segments);
-
-    // var uniquePoints = (function(points) {
-    //     var set = {};
-    //     return points.filter(function(p) {
-    //         var key = p.x + "," + p.y;
-    //         if (key in set) {
-    //             return false;
-    //         } else {
-    //             set[key] = true;
-    //             return true;
-    //         }
-    //     });
-    // })(points);
-
-    var uniquePoints = points;
 
     var minFOV = radNormalize(heading - (FOV / 2));
     var maxFOV = radNormalize(heading + (FOV / 2));
@@ -92,9 +77,6 @@ function draw() {
 
     ctx.fillStyle = pointInVision(intersects, player) ? 'rgba(255,0,0,0.4)' : 'rgba(255,255,255,0.4)';
 
-    // ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    // ctx.shadowBlur = 30;
-    // ctx.shadowColor = 'rgba(255,255,255,1)';
     ctx.beginPath();
     ctx.moveTo(Center.x, Center.y);
     for (var g = 0; g < intersects.length; g++) {
@@ -106,52 +88,19 @@ function draw() {
     // Player circle
     player.draw(ctx);
 
-    // ctx.fillStyle = "#dd3838";
-    // for(var n=0; n < intersects.length; n++){
-    // 	var intersect = intersects[n];
-    // 	ctx.strokeStyle = (intersect.angle == minFOV || intersect.angle == maxFOV) ? "rgba(0,255,255,0.2)" : "rgba(255,0,0,0.2)";
-
-    // DRAW DEBUG RAYS
-    // ctx.strokeStyle = 'rgb(255,0,0)';
-    // for (var g = 0; g < intersects.length; g++) {
-    //     ctx.beginPath();
-    //     ctx.moveTo(Center.x, Center.y);
-    //     ctx.lineTo(intersects[g].x, intersects[g].y);
-    //     ctx.stroke();
-    // }
-
-
-    // 	// ctx.beginPath();
-    // 	// ctx.arc(intersect.x, intersect.y, 4, 0, 2*Math.PI, false);
-    // 	// ctx.fill();
-    // }
 }
 
 function renderEnvironment() {
-    // var bgImg = new Image();
-    // bgImg.onload = function(){
         ctx.fillStyle = "#000";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // ctx.strokeStyle = "#999";
-        // for (var i = 0; i < Walls.segments.length; i++) {
-        //     var seg = Walls.segments[i];
-        //     ctx.beginPath();
-        //     ctx.moveTo(seg.a.x, seg.a.y);
-        //     ctx.lineTo(seg.b.x, seg.b.y);
-        //     ctx.stroke();
-        // }
-
-        // ctx.drawImage(this, 0, 0);
 
         ctx.fillStyle = "rgb(0,0,255)";
         for(var i=0; i < Walls.boxes.length; i++) {
             var w = Walls.boxes[i];
             ctx.fillRect(w.x, w.y, w.w, w.h);
         }
+
         envImg = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    // };
-    // bgImg.src = "bg.jpg";
 }
 
 var lastUpdate = Date.now();
