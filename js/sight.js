@@ -3,37 +3,6 @@ var SPEED = 10;
 var FOV = deg2rad(50);
 var envImg;
 
-function Player() {
-    this.x = 180;
-    this.y = 170;
-}
-Player.prototype.moveUp = function(dt) { this.y -= SPEED * dt; };
-Player.prototype.moveDown = function(dt) { this.y += SPEED * dt; };
-Player.prototype.moveLeft = function(dt) { this.x -= SPEED * dt; };
-Player.prototype.moveRight = function(dt) { this.x += SPEED * dt; };
-
-var player = new Player();
-
-// function Player(){
-//     this.x = 180;
-//     this.y = 170;
-//     // this.moveUp = function(dt) { this.y -= SPEED * dt; };
-//     // this.moveDown = function(dt) { this.y += SPEED * dt; };
-//     // this.moveLeft = function(dt) { this.x -= SPEED * dt; };
-//     // this.moveRight = function(dt) { this.x += SPEED * dt; };
-// }
-
-// function moveplayerUp(dt){ Player.moveUp(dt); }
-// function moveplayerDown(dt){ Player.moveDown(dt); }
-// function moveplayerLeft(dt){ Player.moveLeft(dt); }
-// function moveplayerRight(dt){ Player.moveRight(dt); }
-
-Events.on("keyUp", player.moveUp);
-Events.on("keyDown", player.moveDown);
-Events.on("keyLeft", player.moveLeft);
-Events.on("keyRight", player.moveRight);
-
-
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
@@ -135,10 +104,7 @@ function draw() {
     ctx.fill();
 
     // Player circle
-    ctx.fillStyle = 'rgb(255,255,100)';
-	ctx.beginPath();
-	ctx.arc(player.x, player.y, 4, 0, RAD, false);
-	ctx.fill();
+    player.draw(ctx);
 
     // ctx.fillStyle = "#dd3838";
     // for(var n=0; n < intersects.length; n++){
@@ -196,16 +162,6 @@ function drawLoop() {
     var now = Date.now();
     var dt = (now - lastUpdate)/100;
     lastUpdate = now;
-
-    // if (Key.isDown(Key.W)) Player.y -= SPEED*dt;
-    // if (Key.isDown(Key.S)) Player.y += SPEED*dt;
-    // if (Key.isDown(Key.D)) Player.x += SPEED*dt;
-    // if (Key.isDown(Key.A)) Player.x -= SPEED*dt;
-
-    // if (Key.isDown(Key.W)) Player.moveUp(dt);
-    // if (Key.isDown(Key.S)) Player.y += SPEED*dt;
-    // if (Key.isDown(Key.D)) Player.x += SPEED*dt;
-    // if (Key.isDown(Key.A)) Player.x -= SPEED*dt;
 
     if (Key.isDown(Key.W)) Events.emit("keyUp", dt, player);
     if (Key.isDown(Key.S)) Events.emit("keyDown", dt, player);
