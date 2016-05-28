@@ -28,7 +28,6 @@ var wallSegments = allWallSegments();
 
 function draw() {
 
-
     var uniquePoints = (function(segments) {
         var a = [];
         segments.forEach(function(seg) {
@@ -64,7 +63,8 @@ function draw() {
         var dx = Math.cos(angler);
         var dy = Math.sin(angler);
 
-        var ray = { a: { x: Center.x, y: Center.y }, b: { x: Center.x + dx, y: Center.y + dy } };
+        // var ray = { a: { x: Center.x, y: Center.y }, b: { x: Center.x + dx, y: Center.y + dy } };
+        var ray = { a: new Vec2(Center.x, Center.y), b: new Vec2(Center.x + dx, Center.y + dy) };
 
         var closestIntersect = null;
 
@@ -139,7 +139,7 @@ window.onload = function() {
 var Center = new Vec2(canvas.width / 2, canvas.height / 2);
 
 canvas.onmousemove = function(event) {
-    heading = Math.atan2(event.clientY - Center.y, event.clientX - Center.x);
+    heading = Center.angleTo(new Vec2(event.clientX, event.clientY));
     updateCanvas = true;
 };
 
