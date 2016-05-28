@@ -1,24 +1,30 @@
 var Wall = function(x,y,w,h,render){
-    this.position = {x: x, y: y};
-    this.size = {w: w, h: h};
+    this.position = new Vec2(x, y);
+    this.size = new Vec2(w, h);
     if (typeof(render) === 'undefined') this.render = true;
 
     this.segments = [];
 
-    this.init = function(){
+    // this.init = function(){
         this.segments.push({a:{x:x,y:y}, b:{x:x+w,y:y}});
         this.segments.push({a:{x:x+w,y:y}, b:{x:x+w,y:y+h}});
         this.segments.push({a:{x:x+w,y:y+h}, b:{x:x,y:y+h}});
         this.segments.push({a:{x:x,y:y+h}, b:{x:x,y:y}});
-    };
-    this.init();
+    // };
+    // this.init();
+};
 
-    return {
-        position: this.position,
-        size: this.size,
-        renderable : this.render,
-        segments: this.segments
-    };
+Wall.prototype.draw = function(ctx) {
+    ctx.fillStyle = "rgb(0,0,255)";
+    if (this.render) ctx.fillRect(this.position.x, this.position.y, this.size.x, this.size.y);
+};
+
+Wall.prototype.debugDraw = function(ctx) {
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgb(255,255,0)';
+    ctx.strokeWidth = 3;
+    ctx.rect(this.position.x,  this.position.y, this.size.x, this.size.y);
+    ctx.stroke();
 };
 
 function wallByGrid(x,y,w,h,grid,render) {
@@ -26,19 +32,8 @@ function wallByGrid(x,y,w,h,grid,render) {
     Walls.push(new Wall(x*grid, y*grid, w*grid, h*grid,render));
 }
 
-var Walls = [];
-
-Walls.push(new Wall(0, 0, canvas.width, canvas.height, false));
-Walls.push(new Wall(50,50,100,200));
-Walls.push(new Wall(850,50,50,400));
-Walls.push(new Wall(750,50,50,400));
-Walls.push(new Wall(250,50,100,50));
-Walls.push(new Wall(650,50,100,50));
-Walls.push(new Wall(400,50,100,50));
-Walls.push(new Wall(750,480,150,50));
-
-wallByGrid(4, 20, 12, 1);
-wallByGrid(4, 30, 12, 1);
-wallByGrid(4, 21, 1, 9);
-wallByGrid(15, 21, 1, 3);
-wallByGrid(15, 27, 1, 3);
+function allWallSegments(){
+    var wallSegments = [];
+    Walls.forEach(function(wall){ wallSegments = wallSegments.concat(wall.segments); });
+    return wallSegments;
+}
